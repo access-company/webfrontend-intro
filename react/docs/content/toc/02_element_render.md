@@ -51,30 +51,54 @@ React が面倒を見ます。結果、DOM API を扱うよりもパフォーマ
 
 そして、以前の DOM と新しい DOM の差分を算出します。
 
+// 以前の仮想 DOMと新しい仮想DOMの差分を算出するのが正しいので、図が間違っていますかね？
+
 ![仮想DOMのイメージ](./02_lesson2-2.png)
 
 計算が終わると、リアル DOM は実際に変更されたものだけが更新されます。
+
+// "実際に変更されたもの"という文言が少し気になるので
+「算出された差分のみ、リアルDOMが更新されます。」 の方がよいかなと思いました。
 
 ![仮想DOMのイメージ](./02_lesson2-3.png)
 
 ## 「秒刻みで動く時計」のサンプルで確認してみよう
 
+// このサンプルでは、時刻部分だけではなく、すべての要素が更新されてしまうので、修正したほうがよいと思います。
+// TODO ドキュメントのサンプルコードを変更したら、react/exercise/C02/Time/index.tsxの変更も行う
+Reactの公式Docでは、propsとしてtimeを受け取るサンプルを使っています。[ステップ 3：React が DOM への変更をコミットする](https://ja.react.dev/learn/render-and-commit#step-3-react-commits-changes-to-the-dom)
+
 「秒刻みで動く時計」のサンプルで、再描画が必要な箇所のみ更新されていることを確認します。
 
 ```javascript
-import { createRoot } from 'react-dom/client';
+import React, { useState, useEffect } from "react";
+import { createRoot } from "react-dom/client";
 
-function tick() {
-  const element = (
+function Clock({ time }) {
+  return (
     <div>
       <h1>Hello, world!</h1>
-      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+      <h2>It is {time}.</h2>
     </div>
   );
-  createRoot(document.body).render(element);
 }
 
-setInterval(tick, 1000);
+function App() {
+  const [time, setTime] = useState(new Date().toLocaleTimeString());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <Clock time={time} />;
+}
+
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
 ```
 
 ```bash

@@ -70,6 +70,9 @@ $ TARGET=C06/Q1 npm run dev
 
 **【注意事項】** 配列の item の値を `key`属性の値とした場合、リストの値に重複があると描画の不具合を起こします。
 
+// どのような不具合が起こるのかを説明するか、公式Docへの参照URLを書いておいた方がよいと思います。[key によるリストアイテムの順序の保持 
+](https://ja.react.dev/learn/rendering-lists#keeping-list-items-in-order-with-key)
+
 ```javascript
 [1, 2, 2, 3, 4, 2];
 ```
